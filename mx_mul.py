@@ -27,7 +27,7 @@ class Matrix:
 
         self.values = []
 
-        print() # newline
+        print("\n", end="") # newline
 
     def load_values(self):
         print(f"Matrix {self.name} values:")
@@ -47,7 +47,7 @@ class Matrix:
 
             self.values.append(row)
 
-        print() # newline
+        print("\n", end="") # newline
 
     def __mul__(self, other):
         result = [[0 for _ in range(other.width)] for _ in range(self.height)]
