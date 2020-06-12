@@ -1,3 +1,3 @@
 # Matrix Multiplication
 
-* [assignment](assignment.pdf)
+* [assignment](other/assignment.pdf)
