@@ -118,5 +118,5 @@ class TestMatrix:
         finally:
             assert output == output_values
 
-    def test__mul__(self):
+    def test___mul__(self):
         pass

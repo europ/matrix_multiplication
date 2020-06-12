@@ -78,6 +78,7 @@ def main():
     matrix_B.load_values()
 
     result = matrix_A * matrix_B
+
     print("Result:")
     for row in result:
         print(*row, sep=" ")
