@@ -53,8 +53,70 @@ class TestMatrix:
         finally:
             assert output == output_values
 
-    def test_load_values(self):
-        pass
+    @pytest.mark.parametrize(
+        'error_message, matrix_name, input_values, output_values',
+        [
+            pytest.param(
+                None,
+                'A',
+                ['2', '3', '1 2', '5 3', '6 7'],
+                ['Matrix A', 'width: ', 'height: ', '\n',
+                 'Matrix A values:', '', '', '', '\n'],
+                id='matrix successfully loads the given values'
+            ),
+            pytest.param(
+                'Incorrect matrix row.',
+                'A',
+                ['5', '5', '1 1 1 1 1', '1 2'],
+                ['Matrix A', 'width: ', 'height: ', '\n',
+                 'Matrix A values:', '', ''],
+                id='matrix fails on given values - incorrect count of values in row'
+            ),
+            pytest.param(
+                'Incorrect row value(s), expecting integer.',
+                'A',
+                ['2', '2', '1 1', '1 a'],
+                ['Matrix A', 'width: ', 'height: ', '\n',
+                 'Matrix A values:', '', ''],
+                id='matrix fails on given values - incorrect value in row'
+            ),
+
+        ],
+    )
+    def test_load_values(self, error_message, matrix_name, input_values, output_values):
+        output = []
+        values = copy.copy(input_values)
+
+        # mock for 'input()'
+        def mock_input(string):
+            output.append(string) # save prompt even it's empty
+            return values.pop(0)
+
+        # mock for 'print()'
+        def mock_output(*args, **kwargs):
+            for arg in args:
+                output.append(str(arg)) # save printing output
+
+        mx_mul.input = mock_input
+        mx_mul.print = mock_output
+
+        matrix = mx_mul.Matrix(matrix_name)
+
+        try:
+            matrix.load_values()
+        except mx_mul.Error as e:
+            assert vars(e) == {'message': error_message, 'error_code': 1}
+        else:
+            attributes = vars(matrix)
+
+            assert attributes['name'] == matrix_name
+            assert attributes['width'] == int(input_values[0])
+            assert attributes['height'] == int(input_values[1])
+            for i in range(len(attributes['values'])):
+                assert attributes['values'][i] == [int(item) for item in input_values[2:][i].split()]
+
+        finally:
+            assert output == output_values
 
     def test__mul__(self):
         pass
