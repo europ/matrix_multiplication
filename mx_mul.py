@@ -4,9 +4,9 @@ import sys
 
 
 class Error(Exception):
-    def __init__(self, message, exitcode=1):
+    def __init__(self, message, error_code=1):
         self.message = message
-        self.exitcode = exitcode
+        self.error_code = error_code
 
 
 class Matrix:
@@ -20,10 +20,16 @@ class Matrix:
         except ValueError:
             raise Error("Incorrect 'width' value, expecting integer.")
 
+        if self.width < 0:
+            raise Error("Incorrect 'width' value, expecting non-negative integer.")
+
         try:
             self.height = int(input("height: "))
         except ValueError:
             raise Error("Incorrect 'height' value, expecting integer.")
+
+        if self.height < 0:
+            raise Error("Incorrect 'height' value, expecting non-negative integer.")
 
         self.values = []
 
@@ -43,7 +49,7 @@ class Matrix:
                 try:
                     row.append(int(value))
                 except ValueError:
-                    raise Error("Incorrect 'height' value, expecting integer.")
+                    raise Error("Incorrect row value(s), expecting integer.")
 
             self.values.append(row)
 
@@ -83,4 +89,4 @@ if __name__ == "__main__":
         sys.exit(0)
     except Error as e:
         print(f"{e.__class__.__name__}. {e.message}")
-        sys.exit(e.exitcode)
+        sys.exit(e.error_code)

@@ -99,16 +99,30 @@ out_vals_3 = [
     '38', '38', '40', '38', '38'
 ]
 
+in_vals_4 = [
+    '2',
+    '3',
+
+    '4',
+    '5'
+]
+
+out_vals_4 = [
+    'Matrix A', 'width: ', 'height: ', '\n',
+    'Matrix B', 'width: ', 'height: ', '\n',
+]
+
 
 @pytest.mark.parametrize(
-    'input_values, output_values',
+    'error_message, input_values, output_values',
     [
-        pytest.param(in_vals_1, out_vals_1, id='matrices from assignment'),
-        pytest.param(in_vals_2, out_vals_2, id='simple matrices'),
-        pytest.param(in_vals_3, out_vals_3, id='advanced matrices'),
+        pytest.param(None, in_vals_1, out_vals_1, id='multiply matrices from assignment'),
+        pytest.param(None, in_vals_2, out_vals_2, id='multiply simple matrices'),
+        pytest.param(None, in_vals_3, out_vals_3, id='multiply advanced matrices'),
+        pytest.param('Incorrect matrix size for multiplication.', in_vals_4, out_vals_4, id='multiply incorrect matrices')
     ],
 )
-def test_main(input_values, output_values):
+def test_main(error_message, input_values, output_values):
     output = []
 
     # mock for 'input()'
@@ -124,6 +138,9 @@ def test_main(input_values, output_values):
     mx_mul.input = mock_input
     mx_mul.print = mock_output
 
-    mx_mul.main()
-
-    assert output == output_values
+    try:
+        mx_mul.main()
+    except mx_mul.Error as e:
+        assert e.message == error_message
+    finally:
+        assert output == output_values
