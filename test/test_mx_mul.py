@@ -1,4 +1,3 @@
-
 import os
 import sys
 import pytest
@@ -112,13 +111,15 @@ out_vals_3 = [
 def test_main(input_values, output_values):
     output = []
 
+    # mock for 'input()'
     def mock_input(string):
-        output.append(string)
+        output.append(string) # save prompt even it's empty
         return input_values.pop(0)
 
+    # mock for 'print()'
     def mock_output(*args, **kwargs):
         for arg in args:
-            output.append(str(arg))
+            output.append(str(arg)) # save printing output
 
     mx_mul.input = mock_input
     mx_mul.print = mock_output

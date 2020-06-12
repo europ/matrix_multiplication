@@ -49,6 +49,7 @@ class Matrix:
 
         print("\n", end="") # newline
 
+    # this could be optimized using 'numpy' or by combining sum(), zip() and list comprehension
     def __mul__(self, other):
         result = [[0 for _ in range(other.width)] for _ in range(self.height)]
 
