@@ -1,5 +1,11 @@
-import mx_mul
+
+import os
+import sys
 import pytest
+
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+
+import mx_mul
 
 in_vals_1 = [
     '2',
@@ -98,9 +104,9 @@ out_vals_3 = [
 @pytest.mark.parametrize(
     'input_values, output_values',
     [
-        pytest.param(in_vals_1, out_vals_1, id='example 1'), # from PDF
-        pytest.param(in_vals_2, out_vals_2, id='example 2'),
-        pytest.param(in_vals_3, out_vals_3, id='example 3'),
+        pytest.param(in_vals_1, out_vals_1, id='matrices from assignment'),
+        pytest.param(in_vals_2, out_vals_2, id='simple matrices'),
+        pytest.param(in_vals_3, out_vals_3, id='advanced matrices'),
     ],
 )
 def test_main(input_values, output_values):

@@ -8,7 +8,7 @@ matrix:
       language: python
       python: 3.8
       before_install:
-        - pip install yamllint
+        - pip install --upgrade --force-reinstall yamllint
       script:
         - yamllint --config-file ./.conf/yamllint.yml .
 
