@@ -3,6 +3,7 @@
 Implementation of simple matrix multiplication, including unit tests.
 
 #### Notes
+
 * [assignment](other/assignment.pdf)
 
 #### Setup
@@ -14,6 +15,7 @@ Implementation of simple matrix multiplication, including unit tests.
 1. `./mx_mul.py` or `tox`
 
 #### TODO
+
 * write unit test for `Matrix.__mul__()`
 * solve duplicated code in unit tests
     * `mock_output()`
