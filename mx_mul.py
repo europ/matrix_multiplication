@@ -50,9 +50,9 @@ class Matrix:
 
             for value in values:
                 try:
-                    row.append(int(value))
+                    row.append(float(value))
                 except ValueError:
-                    raise Error("Incorrect row value(s), expecting integer.")
+                    raise Error("Incorrect row value(s), expecting integer(s) or floating point value(s).")
 
             self.values.append(row)
 
@@ -84,7 +84,10 @@ def main():
 
     print("Result:")
     for row in result:
-        print(*row, sep=" ")
+        for val in row:
+            # remove trailing zeros from floating numbers
+            print('%g' % (val), end=" ")
+        print("\n", end="") # newline
 
 
 if __name__ == "__main__":

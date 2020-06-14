@@ -13,26 +13,32 @@ class TestMatrix:
         'error_message, matrix_name, input_values, output_values',
         [
             pytest.param(None, 'A', [1, 1], ['Matrix A', 'width: ', 'height: ', '\n'], id='initialize 1 x 1 matrix'),
-            pytest.param(None, 'B', [2, 2], ['Matrix B', 'width: ', 'height: ', '\n'], id='initialize 2 x 2 matrix'),
-            pytest.param(None, 'C', [8, 5], ['Matrix C', 'width: ', 'height: ', '\n'], id='initialize 8 x 5 matrix'),
-            pytest.param(None, 'D', [1, 100], ['Matrix D', 'width: ', 'height: ', '\n'], id='initialize 1 x 100 matrix'),
-            pytest.param(None, 'E', [100, 1], ['Matrix E', 'width: ', 'height: ', '\n'], id='initialize 100 x 1 matrix'),
-            pytest.param(None, 'F', [100, 100], ['Matrix F', 'width: ', 'height: ', '\n'], id='initialize 100 x 100 matrix'),
+            pytest.param(None, 'A', [2, 2], ['Matrix A', 'width: ', 'height: ', '\n'], id='initialize 2 x 2 matrix'),
+            pytest.param(None, 'A', [8, 5], ['Matrix A', 'width: ', 'height: ', '\n'], id='initialize 8 x 5 matrix'),
+            pytest.param(None, 'A', [1, 100], ['Matrix A', 'width: ', 'height: ', '\n'], id='initialize 1 x 100 matrix'),
+            pytest.param(None, 'A', [100, 1], ['Matrix A', 'width: ', 'height: ', '\n'], id='initialize 100 x 1 matrix'),
+            pytest.param(None, 'A', [100, 100], ['Matrix A', 'width: ', 'height: ', '\n'], id='initialize 100 x 100 matrix'),
 
             pytest.param("Incorrect 'width' value, expecting integer from <1, inf) range.",
-                         'G', [0, 0], ['Matrix G', 'width: '], id='initialize 0 x 0 matrix'),
+                         'A', [0, 0], ['Matrix A', 'width: '], id='initialize 0 x 0 matrix'),
 
             pytest.param("Incorrect 'width' value, expecting integer from <1, inf) range.",
-                         'H', [0, 1], ['Matrix H', 'width: '], id='initialize 0 x 1 matrix'),
+                         'A', [0, 1], ['Matrix A', 'width: '], id='initialize 0 x 1 matrix'),
 
             pytest.param("Incorrect 'height' value, expecting integer from <1, inf) range.",
-                         'I', [1, 0], ['Matrix I', 'width: ', 'height: '], id='initialize 1 x 0 matrix'),
+                         'A', [1, 0], ['Matrix A', 'width: ', 'height: '], id='initialize 1 x 0 matrix'),
 
             pytest.param("Incorrect 'width' value, expecting integer from <1, inf) range.",
-                         'J', [-1, 1], ['Matrix J', 'width: '], id='initialize -1 x 1 matrix'),
+                         'A', [-1, 1], ['Matrix A', 'width: '], id='initialize -1 x 1 matrix'),
 
             pytest.param("Incorrect 'height' value, expecting integer from <1, inf) range.",
-                         'K', [1, -1], ['Matrix K', 'width: ', 'height: '], id='initialize 1 x -1 matrix')
+                         'A', [1, -1], ['Matrix A', 'width: ', 'height: '], id='initialize 1 x -1 matrix'),
+
+            pytest.param("Incorrect 'width' value, expecting integer.",
+                         'A', ['foo', 1], ['Matrix A', 'width: '], id='initialize "foo" x 1 matrix'),
+
+            pytest.param("Incorrect 'height' value, expecting integer.",
+                         'A', [1, 'foo'], ['Matrix A', 'width: ', 'height: '], id='initialize 1 x "foo" matrix')
         ]
     )
     def test___init__(self, error_message, matrix_name, input_values, output_values):
@@ -57,7 +63,7 @@ class TestMatrix:
         except mx_mul.Error as e:
             assert e.message == error_message
         else:
-            assert vars(matrix) == {'name': matrix_name, 'width': input_values[0], 'height': input_values[1], 'values': []}
+            assert vars(matrix) == {'name': matrix_name, 'width': int(input_values[0]), 'height': int(input_values[1]), 'values': []}
         finally:
             assert output == output_values
 
@@ -73,6 +79,14 @@ class TestMatrix:
                 id='matrix successfully loads the given values'
             ),
             pytest.param(
+                None,
+                'A',
+                ['2', '3', '1 2', '5.7 3.7', '6.7 7.7'],
+                ['Matrix A', 'width: ', 'height: ', '\n',
+                 'Matrix A values:', '', '', '', '\n'],
+                id='matrix successfully loads the given values (floating point numbers)'
+            ),
+            pytest.param(
                 'Incorrect matrix row.',
                 'A',
                 ['5', '5', '1 1 1 1 1', '1 2'],
@@ -81,7 +95,7 @@ class TestMatrix:
                 id='matrix fails on given values - incorrect count of values in row'
             ),
             pytest.param(
-                'Incorrect row value(s), expecting integer.',
+                'Incorrect row value(s), expecting integer(s) or floating point value(s).',
                 'A',
                 ['2', '2', '1 1', '1 a'],
                 ['Matrix A', 'width: ', 'height: ', '\n',
@@ -120,7 +134,7 @@ class TestMatrix:
             assert attributes['width'] == int(input_values[0])
             assert attributes['height'] == int(input_values[1])
             for i in range(len(attributes['values'])):
-                assert attributes['values'][i] == [int(item) for item in input_values[2:][i].split()]
+                assert attributes['values'][i] == [float(item) for item in input_values[2:][i].split()]
 
         finally:
             assert output == output_values
@@ -167,6 +181,16 @@ class TestMatrix:
                  'Matrix A values:', '', '', '', '', '', '\n'],
                 [[15, 30, 45, 60, 75], [15, 30, 45, 60, 75], [15, 30, 45, 60, 75], [15, 30, 45, 60, 75], [15, 30, 45, 60, 75]],
                 id='matrices multiplication - "1 2 3 4 5" rows in both matrices'
+            ),
+            pytest.param(
+                'A',
+                ['5', '5', '1.2 2.4 3.6 4.8 5.2', '1.2 2.4 3.6 4.8 5.2',
+                 '1.2 2.4 3.6 4.8 5.2', '1.2 2.4 3.6 4.8 5.2', '1.2 2.4 3.6 4.8 5.2'],
+                ['Matrix A', 'width: ', 'height: ', '\n',
+                 'Matrix A values:', '', '', '', '', '', '\n'],
+                [[20.64, 41.28, 61.92, 82.56, 89.44], [20.64, 41.28, 61.92, 82.56, 89.44], [20.64, 41.28, 61.92, 82.56, 89.44],
+                 [20.64, 41.28, 61.92, 82.56, 89.44], [20.64, 41.28, 61.92, 82.56, 89.44]],
+                id='matrices multiplication - "1.2 2.4 3.6 4.8 5.2" rows in both matrices (floating point numbers)'
             )
         ]
     )
