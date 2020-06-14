@@ -2,6 +2,8 @@ import os
 import sys
 import pytest
 
+from utils import Mock
+
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
 import mx_mul
@@ -196,28 +198,20 @@ out_vals_7 = [
         pytest.param(None, in_vals_4, out_vals_4, id='trailing spaces'),
         pytest.param(None, in_vals_5, out_vals_5, id='trailing tabulars'),
         pytest.param(None, in_vals_6, out_vals_6, id='multiply matrices including real number'),
-        pytest.param('Incorrect matrix size for multiplication.', in_vals_7, out_vals_7, id='multiply incorrect matrices')
+
+        pytest.param('Incorrect matrix size for multiplication.',
+                     in_vals_7, out_vals_7, id='multiply incorrect matrices')
     ]
 )
 def test_main(error_message, input_values, output_values):
-    output = []
+    mock = Mock(input_values, [])
 
-    # mock for 'input()'
-    def mock_input(string):
-        output.append(string) # save prompt even it's empty
-        return input_values.pop(0)
-
-    # mock for 'print()'
-    def mock_output(*args, **kwargs):
-        for arg in args:
-            output.append(str(arg)) # save printing output
-
-    mx_mul.input = mock_input
-    mx_mul.print = mock_output
+    mx_mul.input = mock.mocked_input
+    mx_mul.print = mock.mocked_print
 
     try:
         mx_mul.main()
     except mx_mul.Error as e:
         assert e.message == error_message
     finally:
-        assert output == output_values
+        assert mock.output == output_values

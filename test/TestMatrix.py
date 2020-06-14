@@ -1,7 +1,8 @@
 import os
 import sys
-import copy
 import pytest
+
+from utils import Mock
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
@@ -42,21 +43,10 @@ class TestMatrix:
         ]
     )
     def test___init__(self, error_message, matrix_name, input_values, output_values):
-        output = []
-        values = copy.copy(input_values)
+        mock = Mock(input_values, [])
 
-        # mock for 'input()'
-        def mock_input(string):
-            output.append(string) # save prompt even it's empty
-            return values.pop(0)
-
-        # mock for 'print()'
-        def mock_output(*args, **kwargs):
-            for arg in args:
-                output.append(str(arg)) # save printing output
-
-        mx_mul.input = mock_input
-        mx_mul.print = mock_output
+        mx_mul.input = mock.mocked_input
+        mx_mul.print = mock.mocked_print
 
         try:
             matrix = mx_mul.Matrix(matrix_name)
@@ -65,7 +55,7 @@ class TestMatrix:
         else:
             assert vars(matrix) == {'name': matrix_name, 'width': int(input_values[0]), 'height': int(input_values[1]), 'values': []}
         finally:
-            assert output == output_values
+            assert mock.output == output_values
 
     @pytest.mark.parametrize(
         'error_message, matrix_name, input_values, output_values',
@@ -105,21 +95,10 @@ class TestMatrix:
         ]
     )
     def test_load_values(self, error_message, matrix_name, input_values, output_values):
-        output = []
-        values = copy.copy(input_values)
+        mock = Mock(input_values, [])
 
-        # mock for 'input()'
-        def mock_input(string):
-            output.append(string) # save prompt even it's empty
-            return values.pop(0)
-
-        # mock for 'print()'
-        def mock_output(*args, **kwargs):
-            for arg in args:
-                output.append(str(arg)) # save printing output
-
-        mx_mul.input = mock_input
-        mx_mul.print = mock_output
+        mx_mul.input = mock.mocked_input
+        mx_mul.print = mock.mocked_print
 
         matrix = mx_mul.Matrix(matrix_name)
 
@@ -137,7 +116,7 @@ class TestMatrix:
                 assert attributes['values'][i] == [float(item) for item in input_values[2:][i].split()]
 
         finally:
-            assert output == output_values
+            assert mock.output == output_values
 
     @pytest.mark.parametrize(
         'matrix_name, input_values, output_values, result_values',
@@ -195,21 +174,10 @@ class TestMatrix:
         ]
     )
     def test___mul__(self, matrix_name, input_values, output_values, result_values):
-        output = []
-        values = copy.copy(input_values)
+        mock = Mock(input_values, [])
 
-        # mock for 'input()'
-        def mock_input(string):
-            output.append(string) # save prompt even it's empty
-            return values.pop(0)
-
-        # mock for 'print()'
-        def mock_output(*args, **kwargs):
-            for arg in args:
-                output.append(str(arg)) # save printing output
-
-        mx_mul.input = mock_input
-        mx_mul.print = mock_output
+        mx_mul.input = mock.mocked_input
+        mx_mul.print = mock.mocked_print
 
         matrix = mx_mul.Matrix(matrix_name)
         matrix.load_values()
@@ -217,4 +185,4 @@ class TestMatrix:
         result = matrix * matrix
 
         assert result == result_values
-        assert output == output_values
+        assert mock.output == output_values

@@ -34,7 +34,7 @@ class Matrix:
 
         self.values = []
 
-        print("\n", end="") # newline
+        print() # newline
 
     def load_values(self):
         print(f"Matrix {self.name} values:")
@@ -43,7 +43,7 @@ class Matrix:
 
         for _ in range(self.height):
             row = []
-            values = re.split(field_separator, input("").strip())
+            values = re.split(field_separator, input().strip())
 
             if len(values) != self.width:
                 raise Error("Incorrect matrix row.")
@@ -56,7 +56,7 @@ class Matrix:
 
             self.values.append(row)
 
-        print("\n", end="") # newline
+        print() # newline
 
     # this could be optimized using 'numpy' or by combining sum(), zip() and list comprehension
     def __mul__(self, other):
@@ -87,7 +87,7 @@ def main():
         for val in row:
             # remove trailing zeros from floating numbers
             print('%g' % (val), end=" ")
-        print("\n", end="") # newline
+        print() # newline
 
 
 if __name__ == "__main__":

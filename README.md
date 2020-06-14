@@ -15,9 +15,3 @@ Implementation of simple matrix multiplication, including unit tests.
 1. Launch
     * script via `./mx_mul.py`
     * linters and tests via `tox`
-
-#### TODO
-
-* solve duplicated code in unit tests
-    * `mock_output()`
-    * `mock_input()`
