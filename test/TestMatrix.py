@@ -12,19 +12,27 @@ class TestMatrix:
     @pytest.mark.parametrize(
         'error_message, matrix_name, input_values, output_values',
         [
-            pytest.param(None, 'A', [0, 0], ['Matrix A', 'width: ', 'height: ', '\n'], id='initialize 0 x 0 matrix'),
-            pytest.param(None, 'B', [1, 1], ['Matrix B', 'width: ', 'height: ', '\n'], id='initialize 1 x 1 matrix'),
-            pytest.param(None, 'C', [2, 2], ['Matrix C', 'width: ', 'height: ', '\n'], id='initialize 2 x 2 matrix'),
-            pytest.param(None, 'D', [8, 5], ['Matrix D', 'width: ', 'height: ', '\n'], id='initialize 8 x 5 matrix'),
-            pytest.param(None, 'E', [1, 100], ['Matrix E', 'width: ', 'height: ', '\n'], id='initialize 1 x 100 matrix'),
-            pytest.param(None, 'F', [100, 1], ['Matrix F', 'width: ', 'height: ', '\n'], id='initialize 100 x 1 matrix'),
-            pytest.param(None, 'G', [100, 100], ['Matrix G', 'width: ', 'height: ', '\n'], id='initialize 100 x 100 matrix'),
+            pytest.param(None, 'A', [1, 1], ['Matrix A', 'width: ', 'height: ', '\n'], id='initialize 1 x 1 matrix'),
+            pytest.param(None, 'B', [2, 2], ['Matrix B', 'width: ', 'height: ', '\n'], id='initialize 2 x 2 matrix'),
+            pytest.param(None, 'C', [8, 5], ['Matrix C', 'width: ', 'height: ', '\n'], id='initialize 8 x 5 matrix'),
+            pytest.param(None, 'D', [1, 100], ['Matrix D', 'width: ', 'height: ', '\n'], id='initialize 1 x 100 matrix'),
+            pytest.param(None, 'E', [100, 1], ['Matrix E', 'width: ', 'height: ', '\n'], id='initialize 100 x 1 matrix'),
+            pytest.param(None, 'F', [100, 100], ['Matrix F', 'width: ', 'height: ', '\n'], id='initialize 100 x 100 matrix'),
 
-            pytest.param("Incorrect 'width' value, expecting non-negative integer.",
-                         'H', [-1, 1], ['Matrix H', 'width: '], id='initialize -1 x 1 matrix'),
+            pytest.param("Incorrect 'width' value, expecting integer from <1, inf) range.",
+                         'G', [0, 0], ['Matrix G', 'width: '], id='initialize 0 x 0 matrix'),
 
-            pytest.param("Incorrect 'height' value, expecting non-negative integer.",
-                         'I', [1, -1], ['Matrix I', 'width: ', 'height: '], id='initialize 1 x -1 matrix')
+            pytest.param("Incorrect 'width' value, expecting integer from <1, inf) range.",
+                         'H', [0, 1], ['Matrix H', 'width: '], id='initialize 0 x 1 matrix'),
+
+            pytest.param("Incorrect 'height' value, expecting integer from <1, inf) range.",
+                         'I', [1, 0], ['Matrix I', 'width: ', 'height: '], id='initialize 1 x 0 matrix'),
+
+            pytest.param("Incorrect 'width' value, expecting integer from <1, inf) range.",
+                         'J', [-1, 1], ['Matrix J', 'width: '], id='initialize -1 x 1 matrix'),
+
+            pytest.param("Incorrect 'height' value, expecting integer from <1, inf) range.",
+                         'K', [1, -1], ['Matrix K', 'width: ', 'height: '], id='initialize 1 x -1 matrix')
         ]
     )
     def test___init__(self, error_message, matrix_name, input_values, output_values):

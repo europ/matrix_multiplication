@@ -21,16 +21,16 @@ class Matrix:
         except ValueError:
             raise Error("Incorrect 'width' value, expecting integer.")
 
-        if self.width < 0:
-            raise Error("Incorrect 'width' value, expecting non-negative integer.")
+        if self.width < 1:
+            raise Error("Incorrect 'width' value, expecting integer from <1, inf) range.")
 
         try:
             self.height = int(input("height: "))
         except ValueError:
             raise Error("Incorrect 'height' value, expecting integer.")
 
-        if self.height < 0:
-            raise Error("Incorrect 'height' value, expecting non-negative integer.")
+        if self.height < 1:
+            raise Error("Incorrect 'height' value, expecting integer from <1, inf) range.")
 
         self.values = []
 
