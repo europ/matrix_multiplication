@@ -12,11 +12,12 @@ Implementation of simple matrix multiplication, including unit tests.
 1. `virtualenv .venv`
 1. `source .venv/bin/activate`
 1. `python3 -m pip install -r requirements.txt`
-1. `./mx_mul.py` or `tox`
+1. Launch
+    * script via `./mx_mul.py`
+    * linters and tests via `tox`
 
 #### TODO
 
-* write unit test for `Matrix.__mul__()`
 * solve duplicated code in unit tests
     * `mock_output()`
     * `mock_input()`

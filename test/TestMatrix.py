@@ -24,8 +24,8 @@ class TestMatrix:
                          'H', [-1, 1], ['Matrix H', 'width: '], id='initialize -1 x 1 matrix'),
 
             pytest.param("Incorrect 'height' value, expecting non-negative integer.",
-                         'I', [1, -1], ['Matrix I', 'width: ', 'height: '], id='initialize 1 x -1 matrix'),
-        ],
+                         'I', [1, -1], ['Matrix I', 'width: ', 'height: '], id='initialize 1 x -1 matrix')
+        ]
     )
     def test___init__(self, error_message, matrix_name, input_values, output_values):
         output = []
@@ -79,9 +79,8 @@ class TestMatrix:
                 ['Matrix A', 'width: ', 'height: ', '\n',
                  'Matrix A values:', '', ''],
                 id='matrix fails on given values - incorrect value in row'
-            ),
-
-        ],
+            )
+        ]
     )
     def test_load_values(self, error_message, matrix_name, input_values, output_values):
         output = []
@@ -118,5 +117,72 @@ class TestMatrix:
         finally:
             assert output == output_values
 
-    def test___mul__(self):
-        pass
+    @pytest.mark.parametrize(
+        'matrix_name, input_values, output_values, result_values',
+        [
+            pytest.param(
+                'A',
+                ['5', '5', '0 0 0 0 0', '0 0 0 0 0', '0 0 0 0 0', '0 0 0 0 0', '0 0 0 0 0'],
+                ['Matrix A', 'width: ', 'height: ', '\n',
+                 'Matrix A values:', '', '', '', '', '', '\n'],
+                [[0, 0, 0, 0, 0], [0, 0, 0, 0, 0], [0, 0, 0, 0, 0], [0, 0, 0, 0, 0], [0, 0, 0, 0, 0]],
+                id='matrices multiplication - only zeros'
+            ),
+            pytest.param(
+                'A',
+                ['5', '5', '0 0 0 0 0', '0 0 0 0 0', '0 0 2 0 0', '0 0 0 0 0', '0 0 0 0 0'],
+                ['Matrix A', 'width: ', 'height: ', '\n',
+                 'Matrix A values:', '', '', '', '', '', '\n'],
+                [[0, 0, 0, 0, 0], [0, 0, 0, 0, 0], [0, 0, 4, 0, 0], [0, 0, 0, 0, 0], [0, 0, 0, 0, 0]],
+                id='matrices multiplication - middle value and zeros'
+            ),
+            pytest.param(
+                'A',
+                ['5', '5', '1 1 1 1 1', '1 1 1 1 1', '1 1 1 1 1', '1 1 1 1 1', '1 1 1 1 1'],
+                ['Matrix A', 'width: ', 'height: ', '\n',
+                 'Matrix A values:', '', '', '', '', '', '\n'],
+                [[5, 5, 5, 5, 5], [5, 5, 5, 5, 5], [5, 5, 5, 5, 5], [5, 5, 5, 5, 5], [5, 5, 5, 5, 5]],
+                id='matrices multiplication - "1 1 1 1 1" rows in both matrices'
+            ),
+            pytest.param(
+                'A',
+                ['5', '5', '1 2 3 4 5', '1 1 1 1 1', '1 1 1 1 1', '1 1 1 1 1', '1 1 1 1 1'],
+                ['Matrix A', 'width: ', 'height: ', '\n',
+                 'Matrix A values:', '', '', '', '', '', '\n'],
+                [[15, 16, 17, 18, 19], [5, 6, 7, 8, 9], [5, 6, 7, 8, 9], [5, 6, 7, 8, 9], [5, 6, 7, 8, 9]],
+                id='matrices multiplication - "1 1 1 1 1" rows in both matrices except the first row'
+            ),
+            pytest.param(
+                'A',
+                ['5', '5', '1 2 3 4 5', '1 2 3 4 5', '1 2 3 4 5', '1 2 3 4 5', '1 2 3 4 5'],
+                ['Matrix A', 'width: ', 'height: ', '\n',
+                 'Matrix A values:', '', '', '', '', '', '\n'],
+                [[15, 30, 45, 60, 75], [15, 30, 45, 60, 75], [15, 30, 45, 60, 75], [15, 30, 45, 60, 75], [15, 30, 45, 60, 75]],
+                id='matrices multiplication - "1 2 3 4 5" rows in both matrices'
+            )
+        ]
+    )
+    def test___mul__(self, matrix_name, input_values, output_values, result_values):
+        output = []
+        values = copy.copy(input_values)
+
+        # mock for 'input()'
+        def mock_input(string):
+            output.append(string) # save prompt even it's empty
+            return values.pop(0)
+
+        # mock for 'print()'
+        def mock_output(*args, **kwargs):
+            for arg in args:
+                output.append(str(arg)) # save printing output
+
+        mx_mul.input = mock_input
+        mx_mul.print = mock_output
+
+        matrix = mx_mul.Matrix(matrix_name)
+        matrix.load_values()
+
+        result = matrix * matrix
+
+        assert result == result_values
+        assert output == output_values

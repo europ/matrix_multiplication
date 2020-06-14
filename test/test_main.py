@@ -120,7 +120,7 @@ out_vals_4 = [
         pytest.param(None, in_vals_2, out_vals_2, id='multiply simple matrices'),
         pytest.param(None, in_vals_3, out_vals_3, id='multiply advanced matrices'),
         pytest.param('Incorrect matrix size for multiplication.', in_vals_4, out_vals_4, id='multiply incorrect matrices')
-    ],
+    ]
 )
 def test_main(error_message, input_values, output_values):
     output = []

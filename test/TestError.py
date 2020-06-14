@@ -13,9 +13,9 @@ class TestError:
         [
             pytest.param('text example 1', None, id='exception with default attributes'),
             pytest.param('text example 2', 2, id='exception with custom error code - 2'),
-            pytest.param('text example 2', 22, id='exception with custom error code - 22'),
-            pytest.param('text example 2', 222, id='exception with custom error code - 222')
-        ],
+            pytest.param('text example 3', 22, id='exception with custom error code - 22'),
+            pytest.param('text example 4', 222, id='exception with custom error code - 222')
+        ]
     )
     def test___init__(self, error_text, error_code):
         try:
