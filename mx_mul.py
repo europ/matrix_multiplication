@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 import sys
+import re
 
 
 class Error(Exception):
@@ -38,9 +39,11 @@ class Matrix:
     def load_values(self):
         print(f"Matrix {self.name} values:")
 
+        field_separator = re.compile(r"\s+")
+
         for _ in range(self.height):
             row = []
-            values = input("").strip().split(" ")
+            values = re.split(field_separator, input("").strip())
 
             if len(values) != self.width:
                 raise Error("Incorrect matrix row.")
